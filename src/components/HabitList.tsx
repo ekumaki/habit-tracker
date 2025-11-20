@@ -60,7 +60,7 @@ export const HabitList: React.FC<HabitListProps> = ({
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             className={clsx(
-                                                "bg-dark-card rounded-xl p-4 flex items-center justify-between shadow-md transition-all group touch-manipulation",
+                                                "bg-dark-card rounded-xl px-4 py-2 flex items-center justify-between shadow-md transition-all group touch-manipulation",
                                                 snapshot.isDragging && "shadow-2xl ring-2 ring-primary z-50 opacity-90"
                                             )}
                                         >
@@ -90,7 +90,7 @@ export const HabitList: React.FC<HabitListProps> = ({
                                                         {habit.name}
                                                     </h4>
                                                     <div className="flex items-center gap-2 mt-1">
-                                                        <span className="text-[13px] text-slate-500">継続:</span>
+                                                        <span className="text-[13px] text-slate-300">継続:</span>
                                                         <span className={clsx(
                                                             "text-sm font-bold",
                                                             streak > 0 ? "text-secondary" : "text-slate-600"

@@ -27,6 +27,28 @@ export const HabitModal: React.FC<HabitModalProps> = ({
         }
     }, [isOpen, editingHabit]);
 
+    useEffect(() => {
+        if (isOpen) {
+            // Lock scroll for both html and body
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+            // Fix height to prevent rubber-band effect
+            document.documentElement.style.height = '100%';
+            document.body.style.height = '100%';
+        } else {
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+            document.documentElement.style.height = '';
+            document.body.style.height = '';
+        }
+        return () => {
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+            document.documentElement.style.height = '';
+            document.body.style.height = '';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const handleSave = async () => {
@@ -40,10 +62,6 @@ export const HabitModal: React.FC<HabitModalProps> = ({
 
         if (deleteState === 'initial') {
             setDeleteState('confirm');
-            // Auto-reset after 5 seconds
-            setTimeout(() => {
-                setDeleteState(prev => prev === 'confirm' ? 'initial' : prev);
-            }, 5000);
         } else {
             await onDelete(editingHabit.id);
             onClose();
@@ -63,7 +81,11 @@ export const HabitModal: React.FC<HabitModalProps> = ({
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="習慣名を入力 (例: 読書 30分)"
-                        className="w-full bg-dark-bg border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-6 transition-colors"
+                        disabled={deleteState === 'confirm'}
+                        className={clsx(
+                            "w-full bg-dark-bg border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-6 transition-colors",
+                            deleteState === 'confirm' && "opacity-50 cursor-not-allowed"
+                        )}
                         autoFocus
                     />
 
@@ -97,13 +119,15 @@ export const HabitModal: React.FC<HabitModalProps> = ({
                             </button>
                         )}
 
-                        <button
-                            type="submit"
-                            disabled={!name.trim()}
-                            className="px-6 py-2 bg-primary hover:bg-emerald-600 text-white rounded-lg font-bold shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            保存
-                        </button>
+                        {deleteState !== 'confirm' && (
+                            <button
+                                type="submit"
+                                disabled={!name.trim()}
+                                className="px-6 py-2 bg-primary hover:bg-emerald-600 text-white rounded-lg font-bold shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                保存
+                            </button>
+                        )}
                     </div>
                 </form>
             </div>
