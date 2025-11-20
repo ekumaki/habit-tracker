@@ -53,7 +53,13 @@ export const addHabit = async (name: string) => {
     const db = await initDB();
     const habits = await db.getAll('habits');
     const order = habits.length;
-    const id = crypto.randomUUID();
+    const uuidv4 = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+    const id = uuidv4();
     const newHabit: Habit = {
         id,
         name,
@@ -229,6 +235,15 @@ export const calculateHabitStreak = (habitId: string, records: Record[]) => {
 
 export const getAchievementSymbol = (date: Date, habits: Habit[], records: Record[]) => {
     if (habits.length === 0) return { symbol: '', color: 'text-gray-500', title: '習慣なし' };
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    if (checkDate > today) {
+        return { symbol: '', color: 'text-gray-500', title: '' };
+    }
 
     const dateStr = format(date, 'yyyy-MM-dd');
     const dayRecords = records.filter(r => r.date === dateStr);

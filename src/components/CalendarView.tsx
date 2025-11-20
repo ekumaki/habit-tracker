@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     format,
     startOfWeek,
@@ -35,6 +35,10 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     const [viewMode, setViewMode] = useState<ViewMode>('week');
     const [currentDate, setCurrentDate] = useState(new Date());
 
+    useEffect(() => {
+        setCurrentDate(selectedDate);
+    }, [selectedDate]);
+
     const days = useMemo(() => {
         let start, end;
         if (viewMode === 'week') {
@@ -68,13 +72,13 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 </button>
 
                 <div
-                    className="flex items-center gap-2 cursor-pointer hover:bg-slate-800 px-3 py-1 rounded-lg transition-colors"
+                    className="flex items-center gap-3 cursor-pointer bg-slate-800/50 hover:bg-slate-800 px-4 py-2 rounded-xl transition-all border border-slate-700 hover:border-slate-600"
                     onClick={toggleView}
                 >
                     <span className="text-lg font-bold text-white">
                         {format(currentDate, 'yyyy年M月', { locale: ja })}
                     </span>
-                    <span className="text-xs text-slate-500 border border-slate-600 px-2 py-0.5 rounded">
+                    <span className="text-[13px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded-md">
                         {viewMode === 'week' ? '月表示へ' : '週表示へ'}
                     </span>
                 </div>
@@ -87,7 +91,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             <div className="bg-dark-card rounded-2xl p-4 shadow-lg">
                 <div className="grid grid-cols-7 gap-1 mb-2">
                     {['日', '月', '火', '水', '木', '金', '土'].map(d => (
-                        <div key={d} className="text-center text-xs font-medium text-slate-500 py-1">{d}</div>
+                        <div key={d} className="text-center text-[13px] font-bold text-slate-300 py-1">{d}</div>
                     ))}
                 </div>
 
@@ -113,13 +117,13 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                                 )}
                             >
                                 <span className={clsx(
-                                    "text-xs mb-0.5",
-                                    isToday ? "text-primary font-bold" : "text-slate-400"
+                                    "text-[13px] mb-0.5",
+                                    isToday ? "text-primary font-bold" : "text-slate-300"
                                 )}>
                                     {format(day, 'd')}
                                 </span>
                                 <span className={clsx("text-sm font-bold leading-none", color)}>
-                                    {symbol}
+                                    {symbol || '\u00A0'}
                                 </span>
                             </button>
                         );

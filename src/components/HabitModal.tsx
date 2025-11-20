@@ -57,51 +57,55 @@ export const HabitModal: React.FC<HabitModalProps> = ({
                     {editingHabit ? '習慣の編集' : '習慣の追加'}
                 </h3>
 
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="習慣名を入力 (例: 読書 30分)"
-                    className="w-full bg-dark-bg border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-6 transition-colors"
-                    autoFocus
-                />
+                <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="習慣名を入力 (例: 読書 30分)"
+                        className="w-full bg-dark-bg border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-6 transition-colors"
+                        autoFocus
+                    />
 
-                {deleteState === 'confirm' && (
-                    <p className="text-sm text-danger mb-4 font-medium animate-pulse">
-                        本当に削除しますか？過去の記録も全て削除されます。
-                    </p>
-                )}
-
-                <div className="flex justify-end gap-3">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors font-medium"
-                    >
-                        キャンセル
-                    </button>
-
-                    {editingHabit && (
-                        <button
-                            onClick={handleDeleteClick}
-                            className={clsx(
-                                "px-4 py-2 rounded-lg text-white transition-colors font-medium",
-                                deleteState === 'confirm'
-                                    ? "bg-danger hover:bg-red-600"
-                                    : "bg-slate-700 hover:bg-red-500/20 hover:text-red-400"
-                            )}
-                        >
-                            {deleteState === 'confirm' ? '削除を実行' : '削除'}
-                        </button>
+                    {deleteState === 'confirm' && (
+                        <p className="text-sm text-danger mb-4 font-medium animate-pulse">
+                            本当に削除しますか？過去の記録も全て削除されます。
+                        </p>
                     )}
 
-                    <button
-                        onClick={handleSave}
-                        disabled={!name.trim()}
-                        className="px-6 py-2 bg-primary hover:bg-emerald-600 text-white rounded-lg font-bold shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        保存
-                    </button>
-                </div>
+                    <div className="flex justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors font-medium"
+                        >
+                            キャンセル
+                        </button>
+
+                        {editingHabit && (
+                            <button
+                                type="button"
+                                onClick={handleDeleteClick}
+                                className={clsx(
+                                    "px-4 py-2 rounded-lg text-white transition-colors font-medium",
+                                    deleteState === 'confirm'
+                                        ? "bg-danger hover:bg-red-600"
+                                        : "bg-slate-700 hover:bg-red-500/20 hover:text-red-400"
+                                )}
+                            >
+                                {deleteState === 'confirm' ? '削除を実行' : '削除'}
+                            </button>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={!name.trim()}
+                            className="px-6 py-2 bg-primary hover:bg-emerald-600 text-white rounded-lg font-bold shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            保存
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

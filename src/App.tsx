@@ -90,11 +90,11 @@ function App() {
         {/* Header */}
         <header className="p-6 flex items-center justify-between sticky top-0 bg-dark-bg/80 backdrop-blur-md z-10">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Habit Tracker
+            習慣トラッカー
           </h1>
           <button
             onClick={() => setSelectedDate(new Date())}
-            className="text-xs font-medium bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full transition-colors text-slate-300"
+            className="text-[13px] font-bold bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full transition-colors text-primary"
           >
             今日へ戻る
           </button>
@@ -113,7 +113,7 @@ function App() {
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <span>{format(selectedDate, 'M月d日 (E)', { locale: ja })}</span>
-              <span className="text-slate-500 text-sm font-normal">の記録</span>
+              <span className="text-slate-300 text-sm font-normal">の記録</span>
             </h2>
 
             <button
