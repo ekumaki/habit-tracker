@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Habit Tracker',
-        short_name: 'Habits',
-        description: 'A simple habit tracker PWA',
+        name: '習慣トラッカー',
+        short_name: '習慣トラッカー',
+        description: 'シンプルな習慣トラッカーPWA',
         theme_color: '#ffffff',
         icons: [
           {
