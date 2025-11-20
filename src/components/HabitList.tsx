@@ -58,22 +58,22 @@ export const HabitList: React.FC<HabitListProps> = ({
                                         <div
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
                                             className={clsx(
-                                                "bg-dark-card rounded-xl p-4 flex items-center justify-between shadow-md transition-all group",
+                                                "bg-dark-card rounded-xl p-4 flex items-center justify-between shadow-md transition-all group touch-manipulation",
                                                 snapshot.isDragging && "shadow-2xl ring-2 ring-primary z-50 opacity-90"
                                             )}
                                         >
                                             <div className="flex items-center gap-4 flex-1">
-                                                {/* Drag Handle */}
-                                                <div {...provided.dragHandleProps} className="text-slate-300 hover:text-white cursor-grab active:cursor-grabbing p-1">
-                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8h16M4 16h16" />
-                                                    </svg>
-                                                </div>
+
 
                                                 {/* Edit Button */}
                                                 <button
-                                                    onClick={() => onEdit(habit)}
+                                                    onClick={(e) => {
+                                                        // Prevent drag start when clicking button
+                                                        // e.stopPropagation(); // Not strictly needed for dnd but good practice if issues arise
+                                                        onEdit(habit);
+                                                    }}
                                                     className="text-slate-300 hover:text-primary transition-colors p-1"
                                                 >
                                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
