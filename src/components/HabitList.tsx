@@ -69,7 +69,7 @@ export const HabitList: React.FC<HabitListProps> = ({
 
                                                 {/* Edit Button */}
                                                 <button
-                                                    onClick={(e) => {
+                                                    onClick={() => {
                                                         // Prevent drag start when clicking button
                                                         // e.stopPropagation(); // Not strictly needed for dnd but good practice if issues arise
                                                         onEdit(habit);
