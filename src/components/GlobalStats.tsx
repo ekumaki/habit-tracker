@@ -14,7 +14,7 @@ export const GlobalStats: React.FC<GlobalStatsProps> = ({ streak }) => {
         <div
             className={clsx(
                 "mb-6 px-6 py-3 rounded-2xl shadow-lg transition-all duration-300 text-center",
-                "bg-primary text-white shadow-primary/20"
+                "bg-gradient-to-r from-blue-600 to-emerald-400 text-white shadow-primary/20"
             )}
         >
             <p className="text-3xl font-extrabold tracking-tight">
