@@ -89,7 +89,7 @@ function App() {
 
         {/* Header */}
         <header className="p-6 flex items-center justify-between sticky top-0 bg-dark-bg/80 backdrop-blur-md z-10">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-emerald-400 bg-clip-text text-transparent">
             習慣トラッカー
           </h1>
           <button
