@@ -47,11 +47,11 @@ function App() {
     loadData();
   }, []);
 
-  const handleAddHabit = async (name: string) => {
+  const handleAddHabit = async (name: string, startDate: string) => {
     if (editingHabit) {
-      await updateHabit({ ...editingHabit, name });
+      await updateHabit({ ...editingHabit, name, startDate });
     } else {
-      await addHabit(name);
+      await addHabit(name, startDate);
     }
     await loadData();
   };

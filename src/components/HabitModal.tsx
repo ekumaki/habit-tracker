@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import clsx from 'clsx';
 import type { Habit } from '../db';
 
 interface HabitModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (name: string) => Promise<void>;
+    onSave: (name: string, startDate: string) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     editingHabit: Habit | null;
 }
@@ -18,11 +19,13 @@ export const HabitModal: React.FC<HabitModalProps> = ({
     editingHabit,
 }) => {
     const [name, setName] = useState('');
+    const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
     const [deleteState, setDeleteState] = useState<'initial' | 'confirm'>('initial');
 
     useEffect(() => {
         if (isOpen) {
             setName(editingHabit ? editingHabit.name : '');
+            setStartDate(editingHabit?.startDate || format(editingHabit?.createdAt || new Date(), 'yyyy-MM-dd'));
             setDeleteState('initial');
         }
     }, [isOpen, editingHabit]);
@@ -53,7 +56,8 @@ export const HabitModal: React.FC<HabitModalProps> = ({
 
     const handleSave = async () => {
         if (!name.trim()) return;
-        await onSave(name.trim());
+        if (!name.trim()) return;
+        await onSave(name.trim(), startDate);
         onClose();
     };
 
@@ -88,6 +92,18 @@ export const HabitModal: React.FC<HabitModalProps> = ({
                         )}
                         autoFocus
                     />
+
+                    <div className="mb-6">
+                        <label className="block text-slate-400 text-sm font-bold mb-2">
+                            開始日
+                        </label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full bg-dark-bg border border-slate-700 rounded-xl p-4 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        />
+                    </div>
 
                     {deleteState === 'confirm' && (
                         <p className="text-sm text-danger mb-4 font-medium animate-pulse">
