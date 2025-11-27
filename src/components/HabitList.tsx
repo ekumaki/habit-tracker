@@ -49,7 +49,7 @@ export const HabitList: React.FC<HabitListProps> = ({
         onReorder(updatedItems);
     };
 
-    const renderHabitItem = (habit: Habit, index: number, provided?: any, snapshot?: any) => {
+    const renderHabitItem = (habit: Habit, provided?: any, snapshot?: any) => {
         const isCompleted = records.some(r => r.habitId === habit.id && r.date === dateStr);
         const streak = calculateHabitStreak(habit.id, records);
 
@@ -121,7 +121,7 @@ export const HabitList: React.FC<HabitListProps> = ({
     if (!isReorderEnabled) {
         return (
             <div className="space-y-3 pb-24">
-                {visibleHabits.map((habit, index) => renderHabitItem(habit, index))}
+                {visibleHabits.map((habit) => renderHabitItem(habit))}
             </div>
         );
     }
@@ -137,7 +137,7 @@ export const HabitList: React.FC<HabitListProps> = ({
                     >
                         {visibleHabits.map((habit, index) => (
                             <Draggable key={habit.id} draggableId={habit.id} index={index}>
-                                {(provided, snapshot) => renderHabitItem(habit, index, provided, snapshot)}
+                                {(provided, snapshot) => renderHabitItem(habit, provided, snapshot)}
                             </Draggable>
                         ))}
                         {provided.placeholder}

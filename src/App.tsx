@@ -17,6 +17,8 @@ import { HabitList } from './components/HabitList';
 import { GlobalStats } from './components/GlobalStats';
 import { HabitModal } from './components/HabitModal';
 
+import { useRegisterSW } from 'virtual:pwa-register/react';
+
 function App() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [records, setRecords] = useState<Record[]>([]);
@@ -26,6 +28,41 @@ function App() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+
+  // PWA Update Logic
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegistered(r: ServiceWorkerRegistration | undefined) {
+      console.log('SW Registered: ' + r);
+    },
+    onRegisterError(error: any) {
+      console.log('SW registration error', error);
+    },
+  });
+
+  // Check for updates when app becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('App became visible, checking for updates...');
+        updateServiceWorker(); // This triggers a check. If new SW found, needRefresh becomes true.
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [updateServiceWorker]);
+
+  // Apply update if needed and modal is closed
+  useEffect(() => {
+    if (needRefresh && !isModalOpen) {
+      console.log('Update available and modal is closed. Updating...');
+      updateServiceWorker(true);
+      setNeedRefresh(false);
+    }
+  }, [needRefresh, isModalOpen, updateServiceWorker, setNeedRefresh]);
 
   const loadData = async () => {
     try {
