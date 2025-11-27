@@ -6,6 +6,7 @@ export interface Habit {
     name: string;
     order: number;
     createdAt: Date;
+    startDate?: string; // YYYY-MM-DD
 }
 
 export interface Record {
@@ -49,7 +50,7 @@ export const initDB = () => {
     return dbPromise;
 };
 
-export const addHabit = async (name: string) => {
+export const addHabit = async (name: string, startDate: string) => {
     const db = await initDB();
     const habits = await db.getAll('habits');
     const order = habits.length;
@@ -65,6 +66,7 @@ export const addHabit = async (name: string) => {
         name,
         order,
         createdAt: new Date(),
+        startDate,
     };
     await db.add('habits', newHabit);
     return newHabit;
@@ -165,17 +167,24 @@ export const calculateGlobalStreak = async (habits: Habit[], records: Record[]) 
         const dateStr = format(checkDate, 'yyyy-MM-dd');
         const dayRecords = dailyRecords[dateStr];
 
-        // If no records at all for this day, and we are looking for FULL completion,
-        // then it's definitely not fully completed (unless 0 habits, but we handled that).
-        // However, prototype logic breaks if "past unrecorded day".
-        // "if (!dailyRecords.hasOwnProperty(dateStr)) break;"
-        // In our case, if no records exist for a date, dailyRecords[dateStr] is undefined.
+        // Filter habits that were active on this date
+        const activeHabits = habits.filter(h => {
+            const habitStartDate = h.startDate || format(h.createdAt, 'yyyy-MM-dd');
+            return habitStartDate <= dateStr;
+        });
 
+        if (activeHabits.length === 0) {
+            // No active habits for this day, so streak cannot extend further back
+            break;
+        }
+
+        // If no records at all for this day, and we are looking for FULL completion,
+        // then it's definitely not fully completed.
         if (!dayRecords) {
             break;
         }
 
-        const isFullyCompleted = habits.every(habit => dayRecords[habit.id] === true);
+        const isFullyCompleted = activeHabits.every(habit => dayRecords[habit.id] === true);
 
         if (isFullyCompleted) {
             currentStreak++;
@@ -248,18 +257,20 @@ export const getAchievementSymbol = (date: Date, habits: Habit[], records: Recor
     const dateStr = format(date, 'yyyy-MM-dd');
     const dayRecords = records.filter(r => r.date === dateStr);
 
-    // Filter habits that existed on this date?
-    // Prototype doesn't do this, it uses current habits. We'll stick to prototype logic for simplicity.
-    // "allHabits.forEach..."
+    // Filter habits that existed on this date
+    const activeHabits = habits.filter(h => {
+        const habitStartDate = h.startDate || format(h.createdAt, 'yyyy-MM-dd');
+        return habitStartDate <= dateStr;
+    });
 
     let completedCount = 0;
-    habits.forEach(habit => {
+    activeHabits.forEach(habit => {
         if (dayRecords.some(r => r.habitId === habit.id)) {
             completedCount++;
         }
     });
 
-    const totalCount = habits.length;
+    const totalCount = activeHabits.length;
     const completionRate = (completedCount / totalCount) * 100;
 
     if (totalCount === 0) return { symbol: '', color: 'text-gray-500', title: '記録なし' };
