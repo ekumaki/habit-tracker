@@ -97,12 +97,22 @@ export const HabitModal: React.FC<HabitModalProps> = ({
                         <label className="block text-slate-400 text-sm font-bold mb-2">
                             開始日
                         </label>
-                        <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="w-full bg-dark-bg border border-slate-700 rounded-xl p-4 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
-                        />
+                        <div className="relative">
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="block w-full appearance-none bg-dark-bg border border-slate-700 rounded-xl p-4 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors [&::-webkit-calendar-picker-indicator]:opacity-0"
+                            />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     {deleteState === 'confirm' && (
