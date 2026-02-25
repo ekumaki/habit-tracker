@@ -290,3 +290,55 @@ export const getAchievementSymbol = (date: Date, habits: Habit[], records: Recor
     }
     return { symbol: '', color: 'text-gray-500', title: '記録なし' };
 };
+
+// --- Settings & Backup Logic ---
+
+export const exportAllData = async () => {
+    const db = await initDB();
+    const habits = await db.getAll('habits');
+    const records = await db.getAll('records');
+
+    return JSON.stringify({
+        version: 1,
+        habits,
+        records
+    }, null, 2);
+};
+
+export const importAllData = async (jsonString: string) => {
+    try {
+        const data = JSON.parse(jsonString);
+        if (!data.habits || !data.records) {
+            throw new Error('無効なデータ形式です。');
+        }
+
+        const db = await initDB();
+        const tx = db.transaction(['habits', 'records'], 'readwrite');
+
+        // Clear existing data
+        await tx.objectStore('habits').clear();
+        await tx.objectStore('records').clear();
+
+        // Import new data
+        for (const habit of data.habits) {
+            await tx.objectStore('habits').put(habit);
+        }
+        for (const record of data.records) {
+            await tx.objectStore('records').put(record);
+        }
+
+        await tx.done;
+        return { success: true };
+    } catch (error) {
+        console.error('Import failed:', error);
+        return { success: false, error: error instanceof Error ? error.message : '不明なエラーが発生しました。' };
+    }
+};
+
+export const resetAllData = async () => {
+    const db = await initDB();
+    const tx = db.transaction(['habits', 'records'], 'readwrite');
+    await tx.objectStore('habits').clear();
+    await tx.objectStore('records').clear();
+    await tx.done;
+};
