@@ -22,6 +22,7 @@ interface CalendarViewProps {
     records: Record[];
     selectedDate: Date;
     onDateSelect: (date: Date) => void;
+    onGoToToday: () => void;
 }
 
 type ViewMode = 'week' | 'month';
@@ -30,7 +31,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     habits,
     records,
     selectedDate,
-    onDateSelect
+    onDateSelect,
+    onGoToToday,
 }) => {
     const [viewMode, setViewMode] = useState<ViewMode>('week');
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -66,25 +68,39 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
     return (
         <div className="mb-8">
-            <div className="flex items-center justify-between mb-4 px-2">
-                <button onClick={handlePrev} className="p-2 text-slate-400 hover:text-white transition-colors">
-                    &lt;
+            <div className="flex items-center justify-between mb-4 px-1 gap-1">
+                <button
+                    onClick={handlePrev}
+                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </button>
 
-                <div
-                    className="flex items-center gap-3 cursor-pointer bg-slate-800/50 hover:bg-slate-800 px-4 py-2 rounded-xl transition-all border border-slate-700 hover:border-slate-600"
-                    onClick={toggleView}
-                >
-                    <span className="text-lg font-bold text-white">
+                <div className="flex items-center bg-slate-800/50 border border-slate-700/50 rounded-xl p-1 shadow-inner">
+                    <div className="px-3 py-1.5 text-sm font-bold text-white whitespace-nowrap">
                         {format(currentDate, 'yyyy年M月', { locale: ja })}
-                    </span>
-                    <span className="text-[13px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded-md">
-                        {viewMode === 'week' ? '月表示へ' : '週表示へ'}
-                    </span>
+                    </div>
+
+                    <button
+                        onClick={toggleView}
+                        className="px-3 py-1.5 text-[13px] font-bold text-primary hover:bg-primary/10 border-2 border-primary/30 rounded-lg transition-all whitespace-nowrap mx-1"
+                    >
+                        {viewMode === 'week' ? '月表示' : '週表示'}
+                    </button>
+
+                    <button
+                        onClick={onGoToToday}
+                        className="px-3 py-1.5 text-[13px] font-bold text-primary hover:bg-primary/10 border-2 border-primary/30 rounded-lg transition-all whitespace-nowrap mx-1"
+                    >
+                        今日
+                    </button>
                 </div>
 
-                <button onClick={handleNext} className="p-2 text-slate-400 hover:text-white transition-colors">
-                    &gt;
+                <button
+                    onClick={handleNext}
+                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
 

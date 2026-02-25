@@ -64,11 +64,11 @@ export const HabitList: React.FC<HabitListProps> = ({
                     !isReorderEnabled && "cursor-default"
                 )}
             >
-                <div className="flex items-center gap-4 flex-1">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
                     {/* Edit Button */}
                     <button
                         onClick={() => onEdit(habit)}
-                        className="text-slate-300 hover:text-primary transition-colors p-1"
+                        className="text-primary hover:text-emerald-400 transition-colors p-1"
                     >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -100,7 +100,7 @@ export const HabitList: React.FC<HabitListProps> = ({
                     onClick={() => onToggle(habit)}
                     disabled={!isToday && dateStr > format(new Date(), 'yyyy-MM-dd')} // Disable future
                     className={clsx(
-                        "w-8 h-8 rounded-lg border-2 flex items-center justify-center transition-all ml-4",
+                        "w-8 h-8 shrink-0 rounded-lg border-2 flex items-center justify-center transition-all ml-4",
                         isCompleted
                             ? "bg-primary border-primary text-white shadow-lg shadow-primary/30"
                             : "border-slate-600 hover:border-primary/50 bg-slate-800/50"
